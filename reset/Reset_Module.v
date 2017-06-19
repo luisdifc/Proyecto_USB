@@ -1,28 +1,32 @@
-module Reset_Module (CLK, reset);
+module Reset_Module (CLK, reset, PHY_Reset, tHardResetCompleteTimer, TRANSMIT, SOPMessage, ALERT);
 //outputs declaration
-
+output reg [3:0] TRANSMIT; //es un registro de la memoria
+output reg [2:0] SOPMessage;  
+output reg [15:0] ALERT;
 
 //inputs declaration
 input wire CLK;
 input wire reset;
+input wire tHardResetCompleteTimer;
 
 //variables
-reg [1:0] state;
-reg [1:0] nxtState;
+reg [6:0] state;
+reg [6:0] nxtState;
+int timeLapse = 200; //por decir algo, algun tiempo
 
 //macchine states
-localparam IDLE = 6'b000001;
-localparam PRL_Rx_Wait_for_PHY_message = 6'b000010;
-localparam PRL_Rx_Message_Discard = 6'b000100;
-localparam PRL_RX_Send_GoodCRC = 6'b001000;
-localparam PRL_RX_Report_SOP = 6'b010000;
-localparam FATAL = 6'b100000;
-		
+localparam IDLE = 7'b0000001;
+localparam PRL_HR_Wait_for_Hard_Reset_Request = 7'b0000010;
+localparam PRL_HR_Construct_Message = 7'b0000100;
+localparam PRL_HR_Success = 7'b0001000;
+localparam PRL_HR_Failure = 7'b0010000;
+localparam PRL_HR_Report = 7'b0100000;
+localparam FATAL = 7'b1000000;
 
 //reset 
 always @(posedge CLK) begin 
 	if (reset) begin
-		state <= PRL_Rx_Wait_for_PHY_message; //initial state
+		state <= IDLE; //initial state
 	end else begin
 		state <= nxtState;
 	end //end else
@@ -31,31 +35,54 @@ end //always @(posedge CLK)
 
 //STATE MACHINE
 always @ (*) begin
-	nxtState <= state;
+	nxtState = state;
+	TRANSMIT = 3'b000;	
+
 	case (state)
+		//----------FIRST STATE----------
 		IDLE: begin
-			
+			nxtState <= PRL_HR_Wait_for_Hard_Reset_Request;
 		end //IDLE
 
-		PRL_Rx_Wait_for_PHY_message: begin
-			
-		end //PRL_Rx_Wait_for_PHY_message
+		//----------SECOND STATE----------
+		PRL_HR_Wait_for_Hard_Reset_Request: begin
+			nxtState <= PRL_HR_Construct_Message;
+			TRANSMIT <= 4'b0101; // usamos 101 no 110
+			tHardResetCompleteTimer <= 0;
+		end //PRL_HR_Wait_for_Hard_Reset_Request
 
-		PRL_Rx_Message_Discard: begin
-			
-		end //PRL_Rx_Message_Discard
+		//----------THIRD STATE----------
+		PRL_HR_Construct_Message: begin
+			if (tHardResetCompleteTimer < timeLapse) begin
+				if (PHY_Reset) begin
+					SOPMessage <= 3'b110; //hubo cable reset o hard reset
+					nxtState <= PRL_HR_Success;
+				end else begin
+					nxtState <= PRL_HR_Construct_Message;
+				end
+			end else begin
+				nxtState <= PRL_HR_Failure;
+			end
+		end //PRL_HR_Construct_Message
 
-		PRL_RX_Send_GoodCRC: begin
-			
-		end //PRL_RX_Send_GoodCRC
+		//----------FOURTH STATE----------
+		PRL_HR_Success: begin
+			nxtState <= PRL_HR_Report;
+		end //PRL_HR_Success
 
-		PRL_RX_Report_SOP: begin
+		PRL_HR_Failure: begin
 			
-		end //PRL_RX_Report_SOP
+		end //PRL_HR_Failure
 
-		FATAL: begin
+		PRL_HR_Report: begin
+			ALERT <= ALERT | 16'b1000000; //ALERT.TransmitSuccesful 
+			ALERT <= ALERT | 16'b10000; //ALERT.TransmitSOP*MessageFailed
+			nxtState <= PRL_HR_Wait_for_Hard_Reset_Request;
+		end //PRL_HR_Report
+
+		// FATAL: begin
 			
-		end // FATAL
+		// end // FATAL
 	endcase 	
 end //end always @ (*) begin
 
