@@ -1,22 +1,22 @@
 //Defines
-`define IDLE_ID 		18'b1
-`define START	  		18'b3
-`define WAIT_ID 		18'b9
-`define SAVE_ID 		18'b17
-`define COMP_ID 		18'b33
-`define ACK1	  		18'b65
+`define IDLE_ID 	18'b1
+`define START	  	18'b3
+`define WAIT_ID 	18'b9
+`define SAVE_ID 	18'b17
+`define COMP_ID 	18'b33
+`define ACK1	  	18'b65
 `define START_REG 	18'b129
 `define WAIT_REG  	18'b257
 `define SAVE_REG  	18'b513
-`define ACK2		  	18'b1025
-`define R_W			  	18'b2049
+`define ACK2		18'b1025
+`define R_W			18'b2049
 `define START_R	  	18'b4097
 `define SEND_IDLE 	18'b8193
-`define SEND		  	18'b16385
+`define SEND		18'b16385
 `define START_W   	18'b32769
 `define WRITE_IDLE	18'b65537
-`define SAVE_W			18'b131073
-`define STOP				18'b262145
+`define SAVE_W		18'b131073
+`define STOP		18'b262145
 
 module I2C_Module (
 	input SCL,
@@ -55,7 +55,8 @@ end
 //Main State Machine
 always @(posedge CLK) begin
 	case(currentState)
-		`IDLE_ID: //IDLE ID
+		`IDLE_ID: //IDLE ID 
+		begin
 			//Valores iniciales de los registros
 				count <= 3'b0;
 				rByte <= 8'b0;
@@ -69,8 +70,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `IDLE_ID;
 			end //else IDLE
+		end //end IDLE_ID
 /********************************/
 		`START: //START ID
+		begin
 			count <= 3'b8;
 			rByte <= 8'b0;
 			R_W <= 1'b1;
@@ -79,8 +82,10 @@ always @(posedge CLK) begin
 			rRec <= 8'b0;
 
 			nextState <= `WAIT_ID;
+		end //START
 /********************************/
 		`WAIT_ID: //WAIT ID
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -93,8 +98,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `WAIT_ID;
 			end //if WAIT_ID
+		end //WAIT_ID
 /********************************/
 		`SAVE_ID: //SAVE ID
+		begin
 			count <= count-1;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -108,8 +115,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `WAIT_ID;
 			end //if SAVE_ID
+		end //SAVE_ID
 /********************************/
 		`COMP_ID: //COMPARE ID
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -122,8 +131,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `IDLE_ID;
 			end //if `COMP_ID
+		end //COMP_ID
 /********************************/
 		`ACK1: //ACKNOWLEDGE 1
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -133,8 +144,10 @@ always @(posedge CLK) begin
 
 			woSDA <= 0; //Envía ACK //Contador para mantener salida activa el tiempo reqerido
 			nextState <= `START_REG;
+		end //ACK1
 /********************************/
 		`START_REG: //START REGISTER
+		begin
 			count <= 3'b8;
 			rByte <= rByte;
 			R_W <= rByte[0];
@@ -143,8 +156,10 @@ always @(posedge CLK) begin
 			rRec <= rRec;
 
 			nextState <= `WAIT_REG;
+		end //START_REG
 /********************************/
 		`WAIT_REG: //WAIT REGISTER
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -157,8 +172,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `WAIT_REG;
 			end //if WAIT_ID
+		end //WAIT_REG
 /********************************/
 		`SAVE_REG: //SAVE REGISTER ADDRESS
+		begin
 			count <= count-1;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -172,8 +189,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `WAIT_REG;
 			end	//if `SAVE_REG
+		end //SAVE_REG
 /********************************/
 		`ACK2: //ACKNOWLEDGE 2
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -183,8 +202,10 @@ always @(posedge CLK) begin
 
 			woSDA <= 0; //Envía ACK //Contador para mantener salida activa el tiempo reqerido
 			nextState <= `R_W;
+		end //ACK2
 /********************************/
 		`R_W: //READ OR WRITE
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -197,8 +218,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `START_W; //Es un Write
 			end //if `R_W
+		end //R_W
 /********************************/
 		`START_R: //START READ
+		begin
 			count <= 3'b8;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -207,8 +230,10 @@ always @(posedge CLK) begin
 			rRec <= rRec;
 
 			nextState <= `SEND_IDLE;
+		end //START_R
 /********************************/
 		`SEND_IDLE: //SEND IDLE
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -221,8 +246,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `SEND_IDLE;
 			end //if `SEND_IDLE
+		end //SEND_IDLE
 /********************************/
 		`SEND: //SEND
+		begin
 			count <= count-1;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -236,8 +263,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `SEND_IDLE;
 			end //if `SEND
+		end //SEND
 /********************************/
 		`START_W: //START W
+		begin
 			count <= 18'b8;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -246,8 +275,10 @@ always @(posedge CLK) begin
 			rRec <= rRec;
 
 			nextState <= `WRITE_IDLE;
+		end //START_W
 /********************************/
 		`WRITE_IDLE: //WRITE IDLE
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -260,8 +291,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `WRITE_IDLE;
 			end //if `WRITE_IDLE
+		end //WRITE_IDLE
 /********************************/
 		`SAVE_W: //SAVE WRITE DATA
+		begin
 			count <= count-1;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -275,8 +308,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `WRITE_IDLE;
 			end //if `SAVE_W
+		end //SAVE_W
 /********************************/
 		`STOP: //STOP
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -289,8 +324,10 @@ always @(posedge CLK) begin
 			end else begin
 				nextState <= `IDLE_ID; //Contador de desconexión
 			end //end `STOP
+		end //STOP
 /********************************/
 		default: //Envía a IDLE_ID
+		begin
 			count <= count;
 			rByte <= rByte;
 			R_W <= R_W;
@@ -299,6 +336,7 @@ always @(posedge CLK) begin
 			rRec <= rRec;
 
 			nextState <= `IDLE_ID;
+		end //default
 	endcase
 
 end //always @(posedge CLK)
