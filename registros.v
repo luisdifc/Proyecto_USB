@@ -25,7 +25,7 @@ reg [7:0] POWER_STATUS_MASK, FAULT_STATUS_MASK, CONFIG_STANDARD_OUTPUT, TCPC_CON
 		  TX_BUF_OBJ1_BYTE_0, TX_BUF_OBJ1_BYTE_1, TX_BUF_OBJ1_BYTE_2, TX_BUF_OBJ1_BYTE_3, TX_BUF_OBJ2_BYTE_0, TX_BUF_OBJ2_BYTE_1, TX_BUF_OBJ2_BYTE_2, TX_BUF_OBJ2_BYTE_3,
 		  TX_BUF_OBJ3_BYTE_0, TX_BUF_OBJ3_BYTE_1, TX_BUF_OBJ3_BYTE_2, TX_BUF_OBJ3_BYTE_3, TX_BUF_OBJ4_BYTE_0, TX_BUF_OBJ4_BYTE_1, TX_BUF_OBJ4_BYTE_2, TX_BUF_OBJ4_BYTE_3,
 		  TX_BUF_OBJ5_BYTE_0, TX_BUF_OBJ5_BYTE_1, TX_BUF_OBJ5_BYTE_2, TX_BUF_OBJ5_BYTE_3, TX_BUF_OBJ6_BYTE_0, TX_BUF_OBJ6_BYTE_1, TX_BUF_OBJ6_BYTE_2, TX_BUF_OBJ6_BYTE_3,
-		  TX_BUF_OBJ7_BYTE_0, TX_BUF_OBJ7_BYTE_1, TX_BUF_OBJ7_BYTE_2, TX_BUF_OBJ7_BYTE_3;
+		  TX_BUF_OBJ7_BYTE_0, TX_BUF_OBJ7_BYTE_1, TX_BUF_OBJ7_BYTE_2, TX_BUF_OBJ7_BYTE_3, TX_BUF_HEADER_BYTE_0, TX_BUF_HEADER_BYTE_1;
 		  
 		  
 always @*
@@ -75,11 +75,13 @@ always @*
 			
 			'h10:
 			begin
+				//Si es lectura
 				if (RNW == 1)
 				begin
 				RD_DATA <= ALERT;
 				end //end if
 				
+				//Si es escritura
 				else
 				begin
 				ALERT <= WR_DATA;
@@ -90,12 +92,14 @@ always @*
 		
 		'h12:
 		begin
+				//Si es lectura
 				if (RNW == 1)
 				begin
 				RD_DATA <= ALERT_MASK;
 				ACK = 1;
 				end //end if
 				
+				//Si es escritura
 				else
 				begin
 				ALERT_MASK <= WR_DATA;
@@ -107,6 +111,8 @@ always @*
 		
 		'h14:
 		begin
+		
+				//Si es lectura
 				if (RNW == 1)
 				begin
 				RD_DATA[7:0] <= POWER_STATUS_MASK;
@@ -114,6 +120,7 @@ always @*
 				ACK = 1;
 				end //end if
 				
+				//Si es escritura
 				else
 				begin
 				POWER_STATUS_MASK <= WR_DATA[7:0];
@@ -124,6 +131,7 @@ always @*
 		
 		'h15:
 		begin
+				//Si es lectura
 				if (RNW == 1)
 				begin
 				RD_DATA[7:0] <= FAULT_STATUS_MASK;
@@ -131,6 +139,7 @@ always @*
 				ACK = 1;
 				end //end if
 				
+				//Si es escritura
 				else
 				begin
 				FAULT_STATUS_MASK <= WR_DATA[7:0];
@@ -331,16 +340,889 @@ always @*
 						
 		end //end para este caso del case
 		
+		'h31:
+		begin
+			RX_BUF_FRAME_TYPE <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h32:
+		begin
+			RX_BUF_HEADER_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h33:
+		begin
+			RX_BUF_HEADER_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h34:
+		begin
+			RX_BUF_OBJ1_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h35:
+		begin
+			RX_BUF_OBJ1_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h36:
+		begin
+			RX_BUF_OBJ1_BYTE_2 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h37:
+		begin
+			RX_BUF_OBJ1_BYTE_3 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+	
+		'h38:
+		begin
+			RX_BUF_OBJ2_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h39:
+		begin
+			RX_BUF_OBJ2_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h3A:
+		begin
+			RX_BUF_OBJ2_BYTE_2 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h3B:
+		begin
+			RX_BUF_OBJ2_BYTE_3 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h3C:
+		begin
+			RX_BUF_OBJ3_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h3D:
+		begin
+			RX_BUF_OBJ3_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h3E:
+		begin
+			RX_BUF_OBJ3_BYTE_2 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h3F:
+		begin
+			RX_BUF_OBJ3_BYTE_3 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h40:
+		begin
+			RX_BUF_OBJ4_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h41:
+		begin
+			RX_BUF_OBJ4_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h42:
+		begin
+			RX_BUF_OBJ4_BYTE_2 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h43:
+		begin
+			RX_BUF_OBJ4_BYTE_3 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h44:
+		begin
+			RX_BUF_OBJ5_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h45:
+		begin
+			RX_BUF_OBJ5_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h46:
+		begin
+			RX_BUF_OBJ5_BYTE_2 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h47:
+		begin
+			RX_BUF_OBJ5_BYTE_3 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h48:
+		begin
+			RX_BUF_OBJ6_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h49:
+		begin
+			RX_BUF_OBJ6_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h4A:
+		begin
+			RX_BUF_OBJ6_BYTE_2 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h4B:
+		begin
+			RX_BUF_OBJ6_BYTE_3 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h4C:
+		begin
+			RX_BUF_OBJ7_BYTE_0 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h4D:
+		begin
+			RX_BUF_OBJ7_BYTE_1 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h4E:
+		begin
+			RX_BUF_OBJ7_BYTE_2 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h4F:
+		begin
+			RX_BUF_OBJ7_BYTE_3 <= WR_DATA[7:0];
+			ACK = 1;
+						
+		end //end para este caso del case
+		
+		'h50:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <= TRANSMIT;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TRANSMIT <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		
+		'h51:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <= TRANSMIT_BYTE_COUNT;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TRANSMIT_BYTE_COUNT <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		
+		'h51:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <= TRANSMIT_BYTE_COUNT;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TRANSMIT_BYTE_COUNT <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		
+		'h52:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <= TX_BUF_HEADER_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_HEADER_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h53:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <= TX_BUF_HEADER_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_HEADER_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h54:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ1_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ1_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h55:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ1_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ1_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h56:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ1_BYTE_2;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ1_BYTE_2 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h57:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ1_BYTE_3;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ1_BYTE_3 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h58:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ2_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ2_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h59:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ2_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ2_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h5A:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ2_BYTE_2;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ2_BYTE_2 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h5B:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ2_BYTE_3;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ2_BYTE_3 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+				
+		'h5C:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ3_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ3_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h5D:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ3_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ3_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h5E:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ3_BYTE_2;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ3_BYTE_2 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h5F:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ3_BYTE_3;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ3_BYTE_3 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h60:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ4_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ4_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h61:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ4_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ4_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h62:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ4_BYTE_2;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ4_BYTE_2 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h63:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ4_BYTE_3;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ4_BYTE_3 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h64:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ5_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ5_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h65:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ5_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ5_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h66:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ5_BYTE_2;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ5_BYTE_2 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h67:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ5_BYTE_3;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ5_BYTE_3 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h68:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ6_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ6_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h69:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ6_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ6_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h6A:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ6_BYTE_2;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ6_BYTE_2 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h6B:
+		begin
+				
+				//Si es lectura
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ6_BYTE_3;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				//Si es escritura
+				else
+				begin
+				TX_BUF_OBJ6_BYTE_3 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h6C:
+		begin
+				//Si es lectura
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ7_BYTE_0;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				//Si es escritura
+				else
+				begin
+				TX_BUF_OBJ7_BYTE_0 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h6D:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ7_BYTE_1;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ7_BYTE_1 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h6E:
+		begin
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ7_BYTE_2;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				else
+				begin
+				TX_BUF_OBJ7_BYTE_2 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h6F:
+		begin
+				//Si es lectura
+				if (RNW == 1)
+				begin
+				RD_DATA[7:0] <=TX_BUF_OBJ7_BYTE_3;
+				RD_DATA[15:8] <= 8'b0;
+				ACK = 1;
+				end //end if
+				
+				//Si es escritura
+				else
+				begin
+				TX_BUF_OBJ7_BYTE_3 <= WR_DATA[7:0];
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h70:
+		begin
+				
+				RD_DATA <= VBUS_VOLTAGE;
+				ACK = 1;
+				
+			
+		end //end para este caso del case
+		
+		
+		'h72:
+		begin
+		
+				//Si es lectura	
+				if (RNW == 1)
+				begin
+				RD_DATA <= VBUS_SINK_DISCONNECT_THRESHOLD;
+				ACK = 1;
+				end //end if
+				
+				//Si es escritura
+				else
+				begin
+				VBUS_SINK_DISCONNECT_THRESHOLD <= WR_DATA;
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h74:
+		begin
+				//Si es lectura
+				if (RNW == 1)
+				begin
+				RD_DATA <= VBUS_STOP_DISCHARGE_THRESHOLD;
+				ACK = 1;
+				end //end if
+				
+				//Si es escritura
+				else
+				begin
+				VBUS_STOP_DISCHARGE_THRESHOLD <= WR_DATA;
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h76:
+		begin
+				//Si es lectura
+				if (RNW == 1)
+				begin
+				RD_DATA <= VBUS_VOLTAGE_ALARM_HI_CFG;
+				ACK = 1;
+				end //end if
+				
+				//Si es escritura
+				else
+				begin
+				VBUS_VOLTAGE_ALARM_HI_CFG <= WR_DATA;
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		'h78:
+		begin
+				//Si es lectura
+				if (RNW == 1)
+				begin
+				RD_DATA <= VBUS_VOLTAGE_ALARM_LO_CFG;
+				ACK = 1;
+				end //end if
+				
+				//Si es escritura
+				else
+				begin
+				VBUS_VOLTAGE_ALARM_LO_CFG <= WR_DATA;
+				ACK = 1;
+				end //end else
+			
+		end //end para este caso del case
+		
+		
 		
 		endcase
 		
 		end //end if
 		
-	//si req es 0
+	//si req es 0 (o sea, si no está solicitando nada)
 	else
 		begin
-		RD_DATA = 2'h0;
-		ACK = 1;
+		RD_DATA = 4'h0;
+		ACK = 0;
 		
 		end //end else
 
