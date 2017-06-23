@@ -4,19 +4,21 @@
 
 module test_bench ();
 
-  wire wCLK, wiSDA, wOSDA, wSCL;
+  wire wCLK, wiSDA, wOSDA, wSCL, wReset;
 
   I2C_Module i2c (
   	.SCL(wSCL),
   	.CLK(wCLK),
   	.iSDA(wiSDA),
-  	.oSDA(woSDA)
+  	.oSDA(woSDA),
+    .Reset(wReset)
   );
 
   probador_I2C probador (
     .CLK(wCLK),
     .iSDA(wiSDA),
-    .SCL(wSCL)
+    .SCL(wSCL),
+    .Reset(wReset)
   );
 
 	initial

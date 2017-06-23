@@ -1,134 +1,53 @@
-`timescale 1ns/1ps
+`timescale 10ns/1ps
 
-module probador_I2C (CLK, iSDA, SCL);
+module probador_I2C (CLK, iSDA, SCL, Reset);
 
-    output reg CLK, iSDA, SCL;
+    output reg CLK, iSDA, SCL, Reset;
 
     // Configuracion del reloj
 		initial begin
-				CLK = 0;
+				CLK = 1;
+        SCL = 1;
+        Reset = 1;
 		end
 
 		always begin
-				#5 CLK = ~CLK;
+				#1 CLK = ~CLK;
 		end
 
-    initial begin
+    always begin
+        #125 SCL = ~SCL;
+    end
 
-        SCL <= 1;
+    initial begin
+        #2
+        Reset <= 0;
         iSDA <= 1;
-        #30
+        #98
         iSDA <= 0;
-        SCL <= 0;
         //ID malo
-        #30
-        SCL <= 1;
+        #149
         iSDA <= 1;
-        #20
-        SCL <= 0;
+        #249
+        iSDA <= 0;
+        #249
         iSDA <= 1;
-        #20
-        SCL <= 1;
+        #249
+        iSDA <= 0;
+        #249
         iSDA <= 1;
-        #20
-        SCL <= 0;
+        #249
+        iSDA <= 0;
+        #249
         iSDA <= 1;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 0;
         //No tocar SDA
-        #20
-        SCL <= 1;
-        #20
-        SCL <= 0;
-        //ID bueno
-        #30
-        SCL <= 1;
-        iSDA <= 0;
-        #20
-        SCL <= 0;
-        iSDA <= 0;
-        #20
-        SCL <= 1;
-        iSDA <= 0;
-        #20
-        SCL <= 0;
-        iSDA <= 0;
-        #20
-        SCL <= 1;
-        iSDA <= 0;
-        #20
-        SCL <= 0;
-        iSDA <= 0;
-        #20
-        SCL <= 1;
-        iSDA <= 0;
-        #20
-        SCL <= 0;
-        iSDA <= 0;
-        #20
-        SCL <= 1;
-        iSDA <= 0;
-        #20
-        SCL <= 0;
-        iSDA <= 0;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
-        #20
-        SCL <= 1;
-        iSDA <= 0;
-        #20
-        SCL <= 0;
-        iSDA <= 0;
-        #20
-        SCL <= 1;
-        iSDA <= 1;
-        #20
-        SCL <= 0;
-        iSDA <= 1;
-        //No tocar SDA
-        #20
-        SCL <= 1;
-        #20
-        SCL <= 0;
-        #90 $finish;
+        #249
+        #249
+        #249 $finish;
     end
 
 endmodule
