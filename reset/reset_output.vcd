@@ -1,0 +1,308 @@
+$date
+	Thu Jun 22 20:37:27 2017
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module test_bench_reset $end
+$var wire 16 ! Alert [15:0] $end
+$var wire 8 " REC_B_COUNT [7:0] $end
+$var wire 8 # REC_DET [7:0] $end
+$var wire 8 $ TRANS [7:0] $end
+$var wire 1 % cableR $end
+$var wire 1 & clock $end
+$var wire 1 ' hardR $end
+$var wire 1 ( reset $end
+$var wire 1 ) stop $end
+$scope module p_reset $end
+$var wire 16 * ALERT [15:0] $end
+$var wire 1 & CLK $end
+$var wire 1 ) PHY_Stop_Attempting_Reset $end
+$var wire 8 + RECEIVE_BYTE_COUNT [7:0] $end
+$var wire 8 , RECEIVE_DETECT [7:0] $end
+$var wire 8 - TRANSMIT [7:0] $end
+$var reg 1 . cableReset $end
+$var reg 1 / hardReset $end
+$var reg 1 0 reset $end
+$scope module c1 $end
+$var reg 1 1 reloj $end
+$upscope $end
+$upscope $end
+$scope module maquinita_reset $end
+$var wire 1 & CLK $end
+$var wire 1 2 PHY_reset $end
+$var wire 1 % cableReset $end
+$var wire 1 ' hardReset $end
+$var wire 10 3 nanos [9:0] $end
+$var wire 1 ( reset $end
+$var reg 16 4 ALERT [15:0] $end
+$var reg 1 5 PHY_Stop_Attempting_Reset $end
+$var reg 8 6 RECEIVE_BYTE_COUNT [7:0] $end
+$var reg 8 7 RECEIVE_DETECT [7:0] $end
+$var reg 8 8 TRANSMIT [7:0] $end
+$var reg 7 9 nxtState [6:0] $end
+$var reg 1 : nxt_PHY_Stop_Attempting_Reset $end
+$var reg 1 ; nxt_timer_Reset $end
+$var reg 7 < state [6:0] $end
+$var integer 32 = timeLapse [31:0] $end
+$var reg 1 > timer_Reset $end
+$scope module t1 $end
+$var wire 1 & CLK $end
+$var wire 1 ? reset $end
+$var reg 10 @ micros [9:0] $end
+$var reg 10 A milis [9:0] $end
+$var reg 10 B nanos [9:0] $end
+$var reg 10 C segs [9:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx C
+bx B
+bx A
+bx @
+x?
+x>
+b1010 =
+bx <
+x;
+x:
+bx 9
+bx 8
+bx 7
+bx 6
+x5
+bx 4
+bx 3
+02
+01
+10
+0/
+0.
+bx -
+bx ,
+bx +
+bx *
+x)
+1(
+0'
+0&
+0%
+bx $
+bx #
+bx "
+bx !
+$end
+#1
+1;
+0:
+b10 9
+b0 A
+1>
+1?
+05
+0)
+b1 <
+11
+1&
+#2
+b10 9
+b0 C
+b0 @
+b0 B
+b0 3
+01
+0&
+00
+0(
+#3
+b100 9
+b10 <
+11
+1&
+#4
+01
+0&
+#5
+0>
+0?
+b100 <
+11
+1&
+#6
+0;
+b1 B
+b1 3
+01
+0&
+#7
+b10 B
+b10 3
+11
+1&
+#8
+b11 B
+b11 3
+01
+0&
+#9
+b100 B
+b100 3
+11
+1&
+#10
+b101 B
+b101 3
+01
+0&
+#11
+b110 B
+b110 3
+11
+1&
+#12
+b111 B
+b111 3
+01
+0&
+#13
+b1000 B
+b1000 3
+11
+1&
+#14
+b1001 B
+b1001 3
+01
+0&
+#15
+b10000 9
+b1010 B
+b1010 3
+11
+1&
+#16
+b10000 9
+b1011 B
+b1011 3
+01
+0&
+#17
+1;
+1:
+15
+1)
+b100000 9
+1>
+1?
+b1100 B
+b1100 3
+b10000 <
+11
+1&
+#18
+b100000 9
+b0 B
+b0 3
+01
+0&
+#19
+b10 9
+bx1xxxx 4
+bx1xxxx !
+bx1xxxx *
+b100000 <
+11
+1&
+#20
+01
+0&
+#21
+b100 9
+b10 <
+11
+1&
+#22
+b100 9
+12
+1.
+1%
+01
+0&
+#23
+b1000 9
+b0 7
+b0 #
+b0 ,
+b1 6
+b1 "
+b1 +
+bx11x 8
+bx11x $
+bx11x -
+0>
+0?
+b100 <
+11
+1&
+#24
+0;
+b1000 9
+b1 B
+b1 3
+01
+0&
+#25
+b100000 9
+1>
+1?
+b10 B
+b10 3
+b1000 <
+11
+1&
+#26
+1;
+b100000 9
+b0 B
+b0 3
+01
+0&
+#27
+b10 9
+bx1x1xxxx 4
+bx1x1xxxx !
+bx1x1xxxx *
+b100000 <
+11
+1&
+#28
+01
+0&
+#29
+b100 9
+b10 <
+11
+1&
+#30
+01
+0&
+#31
+b1000 9
+0>
+0?
+b100 <
+11
+1&
+#32
+0;
+b1000 9
+b1 B
+b1 3
+01
+0&
