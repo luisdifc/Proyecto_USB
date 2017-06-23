@@ -1,15 +1,23 @@
-module Registros(ADDR, RNW, WR_DATA, RD_DATA, req, ACK);
+module Registros(ADDR, RNW, WR_DATA, RD_DATA, req, ACK, cc_status, power_status, alert, alert_mask, power_status_mask, fault_status_mask);
+
+input [15:0] alert, alert_mask, 
+
+input [7:0] cc_status, power_status, alert, alert_mask, power_status_mask, fault_status_mask;
+
 
 //Entradas
 input [7:0] ADDR;
 input [15:0] WR_DATA;
 input RNW, req;
 
+
+
 //Salidas
 output ACK;
 reg ACK;
 output [15:0] RD_DATA;
 reg [15:0] RD_DATA;
+
 
 
 //Registros
@@ -28,53 +36,68 @@ reg [7:0] POWER_STATUS_MASK, FAULT_STATUS_MASK, CONFIG_STANDARD_OUTPUT, TCPC_CON
 		  TX_BUF_OBJ7_BYTE_0, TX_BUF_OBJ7_BYTE_1, TX_BUF_OBJ7_BYTE_2, TX_BUF_OBJ7_BYTE_3, TX_BUF_HEADER_BYTE_0, TX_BUF_HEADER_BYTE_1;
 		  
 		  
+		  
 always @*
 	begin
+	
+	//Esto es para que actualice los valores de las entradas que vienen del hardware
+	//ALERT <= alert;
+	//ALERT_MASK <= alert_mask;
+	//POWER_STATUS_MASK <= power_status_mask;
+	//FAULT_STATUS_MASK <= fault_status_mask;
+	
+	
+	
+	
+	
 	//req indica que se tiene un acceso desde el CPU
 	if (req == 'b1)
 		begin
 		
 		case(ADDR)
 		
-			'h00:
-			begin
-				RD_DATA <=  VENDOR_ID;
-				ACK = 1;
+		'h00:
+		begin
+			RD_DATA <=  VENDOR_ID;
+			ACK = 1;
 			
-			end //end para este caso del case	
-			'h02:
-			begin
+		end //end para este caso del case	
+			
+		'h02:
+		begin
 				RD_DATA <= PRODUCT_ID;
 				ACK = 1;
-			end //end para este caso del case
+		end //end para este caso del case
 			
-				'h04:
-			begin
-				RD_DATA <= DEVICE_ID;
-				ACK = 1;
+		'h04:
+		begin
+			RD_DATA <= DEVICE_ID;
+			ACK = 1;
 			
-			end //end para este caso del case
-			'h06:
-			begin
+		end //end para este caso del case
+		
+		'h06:
+		begin
 				RD_DATA <= USBTYPEC_REV;
 				ACK = 1;
 			
-			end //end para este valor específico del case
-			'h08:
-			begin
-				RD_DATA <= USBPD_REV_VER;
-				ACK = 1;
-			end
+		end //end para este valor específico del case
+		
+		'h08:
+		begin
+			RD_DATA <= USBPD_REV_VER;
+			ACK = 1;
+		end //end para este valor específico del case
 			
-			'h0A:
-			begin
-				RD_DATA <= PD_INTERFACE_REV;
-				ACK = 1;
+		'h0A:
+		begin
+			RD_DATA <= PD_INTERFACE_REV;
+			ACK = 1;
 			
-			end //end para este valor específico del case
+		end //end para este valor específico del case
 			
-			'h10:
-			begin
+		'h10:
+		begin
 				//Si es lectura
 				if (RNW == 1)
 				begin
@@ -88,7 +111,7 @@ always @*
 				ACK = 1;
 				end //end else
 			
-			end //end para este caso del case
+		end //end para este caso del case
 		
 		'h12:
 		begin
@@ -235,6 +258,7 @@ always @*
 		
 		'h1D:
 		begin
+			CC_STATUS <= cc_status;
 			RD_DATA[7:0] <= CC_STATUS;
 			RD_DATA[15:8] <= 8'b0;
 			ACK = 1;
