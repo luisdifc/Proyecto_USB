@@ -1,0 +1,266 @@
+$date
+	Fri Jun 23 04:09:54 2017
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module test_bench_Rxt $end
+$var wire 16 ! ALERT [15:0] $end
+$var wire 16 " ALERTo [15:0] $end
+$var wire 8 # DATA_to_Buffero [7:0] $end
+$var wire 8 $ DIR_WRITEo [7:0] $end
+$var wire 1 % GoodCRC_to_PHYo $end
+$var wire 8 & RECEIVE_BYTE_COUNT [7:0] $end
+$var wire 8 ' RECEIVE_BYTE_COUNTo [7:0] $end
+$var wire 8 ( RECEIVE_DETECT [7:0] $end
+$var wire 8 ) RX_BUF_FRAME_TYPE [7:0] $end
+$var wire 1 * cC_Busy $end
+$var wire 1 + cC_IDLE $end
+$var wire 1 , clock $end
+$var wire 8 - data_In [7:0] $end
+$var wire 1 . reset $end
+$var wire 1 / start $end
+$var wire 1 0 tx_State_Machine_ACTIVE $end
+$var wire 1 1 unexpected_GoodCRC $end
+$scope module p_Rx $end
+$var wire 1 , CLK $end
+$var wire 16 2 oALERT [15:0] $end
+$var wire 8 3 oDATA_to_Buffer [7:0] $end
+$var wire 8 4 oDIR_WRITE [7:0] $end
+$var wire 1 % oGoodCRC_to_PHY $end
+$var wire 8 5 oRECEIVE_BYTE_COUNT [7:0] $end
+$var reg 1 6 CC_Busy $end
+$var reg 1 7 CC_IDLE $end
+$var reg 8 8 Data_In [7:0] $end
+$var reg 1 9 Start $end
+$var reg 1 : Tx_State_Machine_ACTIVE $end
+$var reg 1 ; Unexpected_GoodCRC $end
+$var reg 16 < iALERT [15:0] $end
+$var reg 8 = iRECEIVE_BYTE_COUNT [7:0] $end
+$var reg 8 > iRECEIVE_DETECT [7:0] $end
+$var reg 8 ? iRX_BUF_FRAME_TYPE [7:0] $end
+$var reg 1 @ reset $end
+$scope module c1 $end
+$var reg 1 A reloj $end
+$upscope $end
+$upscope $end
+$scope module maquinita_Rx $end
+$var wire 1 * CC_Busy $end
+$var wire 1 + CC_IDLE $end
+$var wire 1 , CLK $end
+$var wire 8 B Data_In [7:0] $end
+$var wire 1 C PHY_Reset $end
+$var wire 1 / Start $end
+$var wire 1 0 Tx_State_Machine_ACTIVE $end
+$var wire 1 1 Unexpected_GoodCRC $end
+$var wire 16 D iALERT [15:0] $end
+$var wire 8 E iRECEIVE_BYTE_COUNT [7:0] $end
+$var wire 8 F iRECEIVE_DETECT [7:0] $end
+$var wire 8 G iRX_BUF_FRAME_TYPE [7:0] $end
+$var wire 1 . reset $end
+$var reg 6 H nxt_State [5:0] $end
+$var reg 16 I nxt_oALERT [15:0] $end
+$var reg 8 J nxt_oDATA_to_Buffer [7:0] $end
+$var reg 8 K nxt_oDIR_WRITE [7:0] $end
+$var reg 1 L nxt_oGoodCRC_to_PHY $end
+$var reg 8 M nxt_oRECEIVE_BYTE_COUNT [7:0] $end
+$var reg 16 N oALERT [15:0] $end
+$var reg 8 O oDATA_to_Buffer [7:0] $end
+$var reg 8 P oDIR_WRITE [7:0] $end
+$var reg 1 Q oGoodCRC_to_PHY $end
+$var reg 8 R oRECEIVE_BYTE_COUNT [7:0] $end
+$var reg 6 S state [5:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx S
+bx R
+xQ
+bx P
+bx O
+bx N
+bx M
+xL
+bx K
+bx J
+bx I
+bx H
+b110 G
+b1 F
+b101 E
+b0 D
+1C
+b10011001 B
+0A
+0@
+b110 ?
+b1 >
+b101 =
+b0 <
+0;
+0:
+19
+b10011001 8
+07
+06
+bx 5
+bx 4
+bx 3
+bx 2
+01
+00
+1/
+0.
+b10011001 -
+0,
+0+
+0*
+b110 )
+b1 (
+bx '
+b101 &
+x%
+bx $
+bx #
+bx "
+b0 !
+$end
+#1
+b0 J
+b0 M
+b0 I
+b0 K
+0L
+b10 H
+b0 O
+b0 #
+b0 3
+0Q
+0%
+b0 R
+b0 '
+b0 5
+b0 N
+b0 "
+b0 2
+b0 P
+b0 $
+b0 4
+b1 S
+1A
+1,
+#2
+0A
+0,
+#3
+1A
+1,
+#4
+0A
+0,
+1@
+1.
+#5
+b100 H
+b10 S
+1A
+1,
+#6
+0A
+0,
+#7
+b1000 H
+b100 S
+1A
+1,
+#8
+0A
+0,
+#9
+b10000 H
+1L
+b1000 S
+1A
+1,
+#10
+0A
+0,
+#11
+b10 H
+b100 I
+b110 M
+b110110 K
+b10011001 J
+1Q
+1%
+b10000 S
+1A
+1,
+#12
+0A
+0,
+#13
+b100 H
+b10011001 O
+b10011001 #
+b10011001 3
+b110 R
+b110 '
+b110 5
+b100 N
+b100 "
+b100 2
+b110110 P
+b110110 $
+b110110 4
+b10 S
+1A
+1,
+#14
+0A
+0,
+#15
+b1000 H
+b100 S
+1A
+1,
+#16
+0A
+0,
+#17
+b10000 H
+b1000 S
+1A
+1,
+#18
+0A
+0,
+#19
+b10 H
+b10000 S
+1A
+1,
+#20
+0A
+0,
+#21
+b100 H
+b10 S
+1A
+1,
+#22
+0A
+0,
+#23
+b1000 H
+b100 S
+1A
+1,
+#24
+0A
+0,

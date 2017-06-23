@@ -7,7 +7,7 @@ module test_bench_reset;
 	wire clock;
 	wire reset;
 	wire phy_ack;
-	wire cableR;
+	wire [7:0] iTrans;
 	wire hardR;
 	wire [7:0] TRANS;
 	wire [15:0] Alert;
@@ -18,24 +18,24 @@ module test_bench_reset;
 	//instancia del probador
 	probador_reset p_reset(.CLK(clock),
 					.reset(reset),
-					.cableReset(cableR),
-					.hardReset(hardR),
-					.TRANSMIT(TRANS),
+					.ioTRANSMIT(iTrans),
+					.PHY_ACK(phy_ack),
+					.oTRANSMIT(TRANS),
 					.ALERT(Alert),
-					.RECEIVE_DETECT(REC_DET),
-					.RECEIVE_BYTE_COUNT(REC_B_COUNT),
+					.oRECEIVE_DETECT(REC_DET),
+					.oRECEIVE_BYTE_COUNT(REC_B_COUNT),
 					.PHY_Stop_Attempting_Reset(stop)
 	);
 
 	//instancia del registro
 	Reset_Module maquinita_reset (.CLK(clock),
 					.reset(reset),
-					.cableReset(cableR),
-					.hardReset(hardR),
-					.TRANSMIT(TRANS),
+					.ioTRANSMIT(iTrans),
+					.PHY_ACK(phy_ack),
+					.oTRANSMIT(TRANS),
 					.ALERT(Alert),
-					.RECEIVE_DETECT(REC_DET),
-					.RECEIVE_BYTE_COUNT(REC_B_COUNT),
+					.oRECEIVE_DETECT(REC_DET),
+					.oRECEIVE_BYTE_COUNT(REC_B_COUNT),
 					.PHY_Stop_Attempting_Reset(stop)
 	);
 endmodule

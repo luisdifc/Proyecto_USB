@@ -1,0 +1,55 @@
+[*]
+[*] GTKWave Analyzer v3.3.62 (w)1999-2014 BSI
+[*] Fri Jun 23 09:07:28 2017
+[*]
+[dumpfile] "/home/luisdifc/documents/eléctrica/presente/digitalesII/proyecto_USB/Proyecto_USB/Rx/Rx_output.vcd"
+[dumpfile_mtime] "Fri Jun 23 09:03:40 2017"
+[dumpfile_size] 3270
+[savefile] "/home/luisdifc/documents/eléctrica/presente/digitalesII/proyecto_USB/Proyecto_USB/Rx/prueba.gtkw"
+[timestart] 0
+[size] 1366 715
+[pos] -1 -1
+*-2.167042 13 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] test_bench_Rxt.
+[sst_width] 207
+[signals_width] 396
+[sst_expanded] 1
+[sst_vpaned_height] 198
+@28
+test_bench_Rxt.maquinita_Rx.CLK
+@200
+-INPUTS
+@28
+test_bench_Rxt.maquinita_Rx.reset
+test_bench_Rxt.maquinita_Rx.Start
+test_bench_Rxt.maquinita_Rx.iRX_BUF_FRAME_TYPE[7:0]
+test_bench_Rxt.maquinita_Rx.iALERT[15:0]
+test_bench_Rxt.maquinita_Rx.iRECEIVE_DETECT[7:0]
+@22
+test_bench_Rxt.maquinita_Rx.iRECEIVE_BYTE_COUNT[7:0]
+@28
+test_bench_Rxt.maquinita_Rx.Tx_State_Machine_ACTIVE
+test_bench_Rxt.maquinita_Rx.Unexpected_GoodCRC
+test_bench_Rxt.maquinita_Rx.CC_Busy
+test_bench_Rxt.maquinita_Rx.CC_IDLE
+@24
+test_bench_Rxt.maquinita_Rx.Data_In[7:0]
+@200
+-OUTPUTS
+@28
+test_bench_Rxt.maquinita_Rx.oALERT[15:0]
+@25
+test_bench_Rxt.maquinita_Rx.oRECEIVE_BYTE_COUNT[7:0]
+@28
+test_bench_Rxt.maquinita_Rx.oGoodCRC_to_PHY
+@22
+test_bench_Rxt.maquinita_Rx.oDIR_WRITE[7:0]
+@24
+test_bench_Rxt.maquinita_Rx.oDATA_to_Buffer[7:0]
+@200
+-States
+@24
+test_bench_Rxt.maquinita_Rx.state[5:0]
+test_bench_Rxt.maquinita_Rx.nxtState[5:0]
+[pattern_trace] 1
+[pattern_trace] 0

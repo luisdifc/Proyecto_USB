@@ -1,11 +1,12 @@
 `include "reloj.v"
 
-module probador_reset(CLK, reset, cableReset, hardReset, TRANSMIT, ALERT, RECEIVE_DETECT, RECEIVE_BYTE_COUNT, PHY_Stop_Attempting_Reset);
+module probador_reset(CLK, reset, ioTRANSMIT, PHY_ACK, oTRANSMIT, ALERT, oRECEIVE_DETECT, oRECEIVE_BYTE_COUNT, 
+						PHY_Stop_Attempting_Reset);
 	//inputs
-	input wire [7:0] TRANSMIT; //es un registro de la memoria
+	input wire [7:0] oTRANSMIT; //es un registro de la memoria
 	input wire [15:0] ALERT;
-	input wire [7:0] RECEIVE_DETECT;
-	input wire [7:0] RECEIVE_BYTE_COUNT;
+	input wire [7:0] oRECEIVE_DETECT;
+	input wire [7:0] oRECEIVE_BYTE_COUNT;
 	input wire PHY_Stop_Attempting_Reset;
 
 	//clock
@@ -14,8 +15,9 @@ module probador_reset(CLK, reset, cableReset, hardReset, TRANSMIT, ALERT, RECEIV
 
 	//outputs
 	output reg reset; 
-	output reg cableReset;
-	output reg hardReset;
+	output reg PHY_ACK;
+	output reg [7:0] ioTRANSMIT;
+
 
 	relojito c1(CLK); //instancia del relojito
 
@@ -23,13 +25,12 @@ module probador_reset(CLK, reset, cableReset, hardReset, TRANSMIT, ALERT, RECEIV
 		$dumpfile("reset_output.vcd"); //genera el archivo .vcd
 	  	$dumpvars;
 
-		reset = 1; //reset puesto
-		cableReset = 0; 
-		hardReset = 0; 
+		reset = 0; //reset puesto
+		ioTRANSMIT = 8'b0;
 
-		#2 reset = 0;
+		#2 reset = 1;
 		
-		#20 cableReset <= 1;
+		#20 ioTRANSMIT[2:0] = 3'b110;
 
 		#10 $finish;
 	end
