@@ -69,7 +69,7 @@ always @ ( CLK, Reset ) begin
 		rAdd <= 8'b0;
 		rSend <= 8'b11110000;
 		rRec <= 8'b0;
-		RW <= 0;
+		RW <= 1;
 		Start <= 0;
 		timeCounter <= 32'b0;
 		timeReset <= 0;

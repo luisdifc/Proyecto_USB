@@ -97,7 +97,7 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         iSDA <= 1;
   /***************************************/
         //Prueba Write
-        #249
+        #100
         //START
         iSDA <= 0;
         //ID bueno
@@ -138,7 +138,7 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         #249
         iSDA <= 0;
         //Soltar la línea SDA
-        #75
+        #70
         iSDA <= 1;
         //Dato a escribir
         #149
