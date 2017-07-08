@@ -6,7 +6,7 @@ module test_bench ();
 
   wire wCLK, wiSDA, wOSDA, wSCL, wReset;
 
-  I2C_Module i2c (
+  I2C_Module2 i2c (
   	.SCL(wSCL),
   	.CLK(wCLK),
   	.iSDA(wiSDA),

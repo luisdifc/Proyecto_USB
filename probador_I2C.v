@@ -6,7 +6,7 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
 
     // Configuracion del reloj
 		initial begin
-				CLK = 1;
+		CLK = 1;
         SCL = 1;
         Reset = 1;
 		end
@@ -70,7 +70,27 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         //Soltar la línea SDA
         #75
         iSDA <= 1;
-        //Registro
+        //Registro primer byte
+        #149
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        //Soltar la línea SDA
+        #75
+        iSDA <= 1;
+		//Registro segundo byte
         #149
         iSDA <= 1;
         #249
