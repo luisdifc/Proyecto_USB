@@ -112,6 +112,7 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         iSDA <= 1;
         //Esperando a recibir dato solicitado
         #1892  //8 ciclos
+        #1892  //8 ciclos
         //Soltar la línea SDA
         #75
         iSDA <= 1;
@@ -140,7 +141,24 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         //Soltar la línea SDA
         #75
         iSDA <= 1;
-        //Registro
+        //Registro nibble alto
+        #149
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        //Registro nibble bajo
         #149
         iSDA <= 0;
         #249
@@ -161,6 +179,22 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         #70
         iSDA <= 1;
         //Dato a escribir
+        #149
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 1;
+        #249
+        iSDA <= 0;
         #149
         iSDA <= 0;
         #249
