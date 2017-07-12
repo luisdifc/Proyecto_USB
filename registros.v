@@ -1,8 +1,9 @@
-module Registros(ADDR, RNW, WR_DATA, RD_DATA, req, ACK, cc_status, power_status, alert, alert_mask, power_status_mask, fault_status_mask);
+module Registros(CLK, ADDR, RNW, WR_DATA, RD_DATA, req, ACK, cc_status, power_status, alert, alert_mask, power_status_mask, fault_status_mask);
+input CLK;
 
-input [15:0] alert, alert_mask, 
+input [15:0] alert, alert_mask; 
 
-input [7:0] cc_status, power_status, alert, alert_mask, power_status_mask, fault_status_mask;
+input [7:0] cc_status, power_status, power_status_mask, fault_status_mask;
 
 
 //Entradas
@@ -37,7 +38,7 @@ reg [7:0] POWER_STATUS_MASK, FAULT_STATUS_MASK, CONFIG_STANDARD_OUTPUT, TCPC_CON
 		  
 		  
 		  
-always @*
+always @(posedge CLK)
 	begin
 	
 	//Esto es para que actualice los valores de las entradas que vienen del hardware
