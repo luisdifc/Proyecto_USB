@@ -91,11 +91,7 @@ always @ (*) begin
 
 		//----------SECOND STATE----------
 		PRL_HR_Wait_for_Hard_Reset_Request: begin
-			if (PHY_reset) begin //si hay reset voy a Construct_Message
-				nxt_State <= PRL_HR_Construct_Message; 
-			end else begin
-				nxt_State <= PRL_HR_Wait_for_Hard_Reset_Request; //si no hay reset me quedo esperando 
-			end
+			nxt_State <= PRL_HR_Construct_Message; 
 		end //PRL_HR_Wait_for_Hard_Reset_Request
 
 		//----------FOURTH STATE----------

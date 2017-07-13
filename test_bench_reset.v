@@ -1,11 +1,11 @@
 `include "I2C/I2C_Module.v"
-`include "Probadores/probador_Tx.v"
+`include "Probadores/probador_Reset.v"
 `include "Registers_Module.v"
 `timescale 1ns/1ps
 
 module test_bench ();
 
-  wire wCLK, wiSDA, wOSDA, wSCL, wReset, wRNW, wGoodCRC, wReq, wMaq_est_req;
+  wire wCLK, wiSDA, wOSDA, wSCL, wReset, wRNW, wGoodCRC, wReq;
   wire [15:0] wRD_DATA, wWR_DATA;
   wire [7:0] wADD;
 
@@ -20,11 +20,10 @@ module test_bench ();
   	.ADDR(wADD),
   	.RNW(wRNW),
   	.goodCRC(wGoodCRC),
-  	.req(wReq),
-    .maq_est_req(wMaq_est_req)
+  	.req(wReq)
   );
 
-  probador_TX probador (
+  probador_Reset probador (
     .CLK(wCLK),
     .iSDA(wiSDA),
     .SCL(wSCL),
@@ -38,8 +37,7 @@ module test_bench ();
     .reset(wReset),
     .WR_DATA(wWR_DATA),
     .RD_DATA(wRD_DATA),
-    .req(wReq),
-    .maq_est_req(wMaq_est_req)
+    .req(wReq)
   );
 
 	initial

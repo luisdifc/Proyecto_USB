@@ -1,6 +1,6 @@
 `timescale 10ns/1ps
 
-module probador_TX (CLK, iSDA, SCL, Reset);
+module probador_Reset (CLK, iSDA, SCL, Reset);
 
     output reg CLK, iSDA, SCL, Reset;
 
@@ -31,17 +31,17 @@ module probador_TX (CLK, iSDA, SCL, Reset);
         //Prueba Write
         //ID bueno
         #149
-        iSDA <= 1;
+        iSDA <= 0;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 0;
+        #249
+        iSDA <= 0;
         #249
         iSDA <= 1;
         #249
-        iSDA <= 1;
-        #249
-        iSDA <= 1;
-        #249
-        iSDA <= 1;
-        #249
-        iSDA <= 1;
+        iSDA <= 0;
         #249
         iSDA <= 1;
         #249
@@ -82,7 +82,7 @@ module probador_TX (CLK, iSDA, SCL, Reset);
         #249
         iSDA <= 0;
         #249
-        iSDA <= 0;
+        iSDA <= 1;
         //Soltar la línea SDA
         #70
         iSDA <= 1;
@@ -103,6 +103,7 @@ module probador_TX (CLK, iSDA, SCL, Reset);
         iSDA <= 0;
         #249
         iSDA <= 0;
+
         #149
         iSDA <= 0;
         #249
