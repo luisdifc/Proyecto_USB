@@ -1,20 +1,19 @@
-module Tx(CLK, TRANSMIT, TRANSMIT_BYTE_COUNT, TRANSMIT_HEADER_LOW, TRANSMIT_HEADER_HIGH, TRANSMIT_DATA_OBJECTS, TRANSMIT_DATA_OUTPUT, GoodCRC_Response,
- ALERT_TransmitSOP_MessageFailed, ALERT_TransmitSOP_MessageSuccessful, TX_BUF_HEADER_BYTE_1, RX_BUF_HEADER_BYTE_1, RX_BUF_FRAME_TYPE);
+module Tx(CLK, TRANSMIT, TRANSMIT_BYTE_COUNT, TRANSMIT_HEADER_LOW, TRANSMIT_HEADER_HIGH, TRANSMIT_DATA_OUTPUT, GoodCRC_Response,
+ ALERT, ALERTo, TX_BUF_HEADER_BYTE_1, RX_BUF_HEADER_BYTE_1, RX_BUF_FRAME_TYPE, reset);
 
 
-input [15:0] TRANSMIT;
+input [15:0] TRANSMIT, ALERT;
 input [7:0] TRANSMIT_BYTE_COUNT, TRANSMIT_HEADER_LOW, TRANSMIT_HEADER_HIGH, TX_BUF_HEADER_BYTE_1, 
 			RX_BUF_HEADER_BYTE_1, RX_BUF_FRAME_TYPE;
-input [223:0] TRANSMIT_DATA_OBJECTS;
 input GoodCRC_Response;
-input CLK;
+input CLK, reset;
 
 
 //wire valor_BYTE_COUNT = TRANSMIT_BYTE_COUNT[0] + TRANSMIT_BYTE_COUNT[1]*2 + TRANSMIT_BYTE_COUNT[2]*4 + TRANSMIT_BYTE_COUNT[3]*8 + TRANSMIT_BYTE_COUNT[4]*16
 	//					 + TRANSMIT_BYTE_COUNT[5]*32 + TRANSMIT_BYTE_COUNT[6]*64 + TRANSMIT_BYTE_COUNT[7]*128;
 							 
 
-
+output reg[15:0] ALERTo;
 
 
 
@@ -30,7 +29,7 @@ parameter 	estado_PRL_Tx_Wait_for_Transmit_Request = 4'b0000,
 //Para uso interno
 reg[3:0] estado_actual;
 reg[3:0] proximo_estado;
-reg [1:0] CRCReceiveTimer;
+reg [11:0] CRCReceiveTimer;
 reg Habilitarcontador;
 
 
@@ -43,32 +42,12 @@ reg [1:0] RetryCounter;
 parameter dimension_real = 239;
 
 //Salidas
-output [dimension_real:0] TRANSMIT_DATA_OUTPUT;
-reg [dimension_real:0] TRANSMIT_DATA_OUTPUT;
+output [7:0] TRANSMIT_DATA_OUTPUT;
+reg [7:0] TRANSMIT_DATA_OUTPUT;
 
-output ALERT_TransmitSOP_MessageFailed;
-reg ALERT_TransmitSOP_MessageFailed;
-
-output ALERT_TransmitSOP_MessageSuccessful;
-reg ALERT_TransmitSOP_MessageSuccessful;
 
 reg bandera;
 
-
-
-//Estado inicial
-initial
-begin
-	estado_actual = estado_PRL_Tx_Wait_for_Transmit_Request;
-	RetryCounter = 'b00;
-	ALERT_TransmitSOP_MessageSuccessful = 0;
-	ALERT_TransmitSOP_MessageFailed = 0;
-	CRCReceiveTimer = 'b00;
-	Habilitarcontador = 0;
-	bandera = 0;
-	TRANSMIT_DATA_OUTPUT = 0;
-	
-end 
 
 
 //Lógica de próximo estado (combinacional)
@@ -102,16 +81,14 @@ case(estado_actual)
 	
 	estado_PRL_Tx_Construct_Message:
 	begin
-		TRANSMIT_DATA_OUTPUT [239:232] = TRANSMIT_HEADER_HIGH;
-		TRANSMIT_DATA_OUTPUT [231:224] = TRANSMIT_HEADER_LOW;
-		TRANSMIT_DATA_OUTPUT [223:0] = TRANSMIT_DATA_OBJECTS;
+		TRANSMIT_DATA_OUTPUT  = TRANSMIT_BYTE_COUNT;
 		proximo_estado = estado_PRL_Tx_Wait_for_PHY_response;
 	end //end para ese caso del case
 	
 	estado_PRL_Tx_Wait_for_PHY_response:
 	begin
 		
-	if (CRCReceiveTimer == 'b11) //Esto es para cuando ya llegó al tiempo límite de espera
+	if (CRCReceiveTimer == 12'h111) //Esto es para cuando ya llegó al tiempo límite de espera
 		begin
 		Habilitarcontador = 0;
 		proximo_estado = estado_PRL_Tx_Check_RetryCounter;
@@ -174,13 +151,13 @@ case(estado_actual)
 	
 	estado_PRL_Tx_Report_Failure:
 	begin
-	ALERT_TransmitSOP_MessageFailed = 1;
+	ALERTo[4] = 1;
 	proximo_estado = estado_PRL_Tx_Wait_for_Transmit_Request;	
 	end //end para este caso del case
 	
 	estado_PRL_Tx_Report_Success:
 	begin
-	ALERT_TransmitSOP_MessageSuccessful = 1;
+	ALERTo[6] = 1;
 	proximo_estado = estado_PRL_Tx_Wait_for_Transmit_Request;
 	end
 	
@@ -196,6 +173,22 @@ end //end always
 
 always @(posedge CLK)
 begin
+
+
+if(reset)
+begin
+	estado_actual <= estado_PRL_Tx_Wait_for_Transmit_Request;
+	RetryCounter <= 'b00;
+	CRCReceiveTimer <= 12'b0;
+	Habilitarcontador <= 0;
+	bandera <= 0;
+	TRANSMIT_DATA_OUTPUT <= 0;
+	ALERTo <= ALERT;
+end //end if
+
+else
+begin
+
 estado_actual <= proximo_estado;
 
 //Lógica para CRCReceiveTimer
@@ -212,7 +205,7 @@ CRCReceiveTimer <= 0;
 end
 	
 
-
+end //end else
 end //end always
 
 endmodule
