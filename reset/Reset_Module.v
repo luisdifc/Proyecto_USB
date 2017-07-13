@@ -1,13 +1,14 @@
 `include "timer.v"
 
-module Reset_Module (CLK, reset, ioTRANSMIT, PHY_ACK, oTRANSMIT, ALERT, oRECEIVE_DETECT, oRECEIVE_BYTE_COUNT, 
+module Reset_Module (CLK, reset, ioTRANSMIT, PHY_ACK, iAlert, oTRANSMIT, ALERT, oRECEIVE_DETECT, oRECEIVE_BYTE_COUNT, 
 						PHY_Stop_Attempting_Reset);
 
 //inputs declaration
-input wire CLK;
+input wire CLK;	
 input wire [7:0] ioTRANSMIT;
 input wire PHY_ACK;
 input wire reset;
+input wire [15:0]iAlert;
 
 //outputs declaration
 output reg [15:0] ALERT;
@@ -31,7 +32,7 @@ integer timeLapse = 10; //por decir algo, algun tiempo
 reg timer_Reset;
 
 //PHY_reset me dice si hubo un cable reset o un hard reset
-assign PHY_reset = (ioTRANSMIT[2:0] == 3'b101) || (ioTRANSMIT[2:0] == 3'b110);
+assign PHY_reset = iAlert[3];
 
 //instancia del timer, me va a contar ns
 timer t1(.CLK(CLK),
@@ -101,7 +102,7 @@ always @ (*) begin
 		PRL_HR_Construct_Message: begin
 			timer_Reset = 0; //Start tHardResetComplete timer
 			if (nanos < timeLapse) begin
-				if (PHY_ACK) begin //Request PHY to send Hard Reset or Cable Reset
+				if (PHY_reset) begin //Request PHY to send Hard Reset or Cable Reset
 					if (ioTRANSMIT[2:0] == 3'b110) begin
 						nxt_oTRANSMIT = oTRANSMIT | 7'b110; //cable reset
 						nxt_oRECEIVE_BYTE_COUNT <= 1;
