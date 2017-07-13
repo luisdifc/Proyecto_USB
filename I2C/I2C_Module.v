@@ -9,7 +9,8 @@ module I2C_Module (
 	output reg [7:0] ADDR,
 	output reg RNW,
 	output reg goodCRC,
-	output reg req
+	output reg req,
+	output reg maq_est_req
 );
 	//Defines
 	parameter IDLE_ID 	 	=	1;
@@ -85,6 +86,7 @@ always @ (CLK, Reset ) begin
 		req <= 0;
 		WR_DATA <= 0;
 		goodCRC <= 0;
+		maq_est_req <= 0;
 	end
 	else begin
 		currentState <= nextState;

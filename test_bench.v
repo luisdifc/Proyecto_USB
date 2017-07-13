@@ -5,7 +5,7 @@
 
 module test_bench ();
 
-  wire wCLK, wiSDA, wOSDA, wSCL, wReset, wRNW, wGoodCRC, wReq;
+  wire wCLK, wiSDA, wOSDA, wSCL, wReset, wRNW, wGoodCRC, wReq, wMaq_est_req;
   wire [15:0] wRD_DATA, wWR_DATA;
   wire [7:0] wADD;
 
@@ -20,7 +20,8 @@ module test_bench ();
   	.ADDR(wADD),
   	.RNW(wRNW),
   	.goodCRC(wGoodCRC),
-  	.req(wReq)
+  	.req(wReq),
+    .maq_est_req(wMaq_est_req)
   );
 
   probador_TX probador (
@@ -37,7 +38,8 @@ module test_bench ();
     .reset(wReset),
     .WR_DATA(wWR_DATA),
     .RD_DATA(wRD_DATA),
-    .req(wReq)
+    .req(wReq),
+    .maq_est_req(wMaq_est_req)
   );
 
 	initial

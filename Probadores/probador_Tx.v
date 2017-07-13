@@ -39,11 +39,11 @@ module probador_TX (CLK, iSDA, SCL, Reset);
         #249
         iSDA <= 1;
         #249
-        iSDA <= 0;
+        iSDA <= 1;
         #249
         iSDA <= 1;
         #249
-        iSDA <= 0;
+        iSDA <= 1;
         #249
         iSDA <= 0;//WRITE
         //Soltar la línea SDA
