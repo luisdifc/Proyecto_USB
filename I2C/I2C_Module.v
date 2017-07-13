@@ -3,7 +3,13 @@ module I2C_Module (
 	input CLK,
 	input iSDA,
 	input Reset,
-	output oSDA
+	output oSDA,
+	input [15:0] RD_DATA,
+	output reg [15:0] WR_DATA,
+	output reg [7:0] ADDR,
+	output reg RNW,
+	output reg goodCRC,
+	output reg req
 );
 	//Defines
 	parameter IDLE_ID 	 	=	1;
@@ -29,9 +35,6 @@ module I2C_Module (
 	parameter WRITE_CYCLE = 2097152;
 	parameter STOP			 	=	4194304;
 
-
-//wires
-
 //registers
 	reg [4:0] 	count; 				 						//Contador de bits recibidos/enviados
 	reg [3:0] 	byteCounter;							//Contador de Bytes recibidos
@@ -44,7 +47,7 @@ module I2C_Module (
 			  			nextState;    		 			  //Registro de próximo estado
 	reg 				Start; 	 									//Banderas para eventos en SDA y SCL
 	reg 				woSDA;							 			//Registro a SDA como salida
-	reg [6:0] 	DevID;				 						//Registro interno con el ID del dispositivo
+	reg [15:0] 	DevID;				 						//Registro interno para almacenar la dirección de ID recibida
 	reg [31:0]  timeCounter;							//Contador de ciclos de CLK
 	reg 				timeReset;								//Resets
 
@@ -62,7 +65,7 @@ end
 
 always @ (CLK, Reset ) begin
 	if (Reset) begin
-		DevID <= 5;
+		DevID <= 0;
 		currentState <= 1;
 		nextState <= 1;
 		count <= 5'b01000;
@@ -76,6 +79,12 @@ always @ (CLK, Reset ) begin
 		timeReset <= 0;
 		woSDA <= 1;
 		byteCounter <= 0;
+		//Registros de comunicación interna
+		ADDR <= 0;
+		RNW <= 0;
+		req <= 0;
+		WR_DATA <= 0;
+		goodCRC <= 0;
 	end
 	else begin
 		currentState <= nextState;
@@ -97,10 +106,16 @@ always @ ( posedge CLK ) begin
 			count <= count;
 			rByte <= 8'b0;	//Limpiando basuras
 			RW <= RW;
-			rAdd <= 8'b0;
+			rAdd <= 16'b0;
 			rSend <= rSend;
 			rRec <= 8'b0;
 			byteCounter <= 0;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			if (Start) begin
 				nextState <= START;
@@ -119,6 +134,12 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			byteCounter <= byteCounter;
 
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
+
 			if (SCL) begin
 				nextState <= START; //Permanece aquí mismo para no releer el mismo estado
 			end											//inequívocamente, espera hasta asegurarse que SCL es bajo
@@ -136,6 +157,12 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			byteCounter <= byteCounter;
 
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
+
 			if (SCL) begin	//Espera hasta que SCL vuelva a estar en alto para ir a leer
 				count <= count-1;
 				nextState <= SAVE_ID;
@@ -145,7 +172,7 @@ always @ ( posedge CLK ) begin
 			end
 		end
 /**********************************/
-		SAVE_ID: begin //Guarda el recibidosbit recibido en rByte
+		SAVE_ID: begin //Guarda el bit recibido en rByte
 			count <= count;
 			rByte <= rByte;
 			rByte[count] <= iSDA;
@@ -154,6 +181,12 @@ always @ ( posedge CLK ) begin
 			rSend <= rSend;
 			rRec <= rRec;
 			byteCounter <= byteCounter;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			timeReset <= 1;
 			nextState <= ID_CYCLE;
@@ -168,14 +201,29 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			byteCounter <= byteCounter;
 
+			goodCRC <= 0;
+
 			if (count == 0) begin
+				ADDR <= 2; //AddressID dirección
+				RNW <= 1; //READ del contenido
+				req <= 1; //Se quiere accesar a registros
+				WR_DATA <= 0; //No se quiere escribir
+				DevID <= RD_DATA; //Obtener ID de los registros
 				nextState <= COMP_ID;
 			end
 			else begin
 				if (timeCounter <= 124) begin //Espera medio ciclo para caer en SCL bajo
+					ADDR <= 0; //Aún no se ocupa solicitud del contenido de ID
+					RNW <= 0;
+					req <= 0;
+					WR_DATA <= 0;
 					nextState <= ID_CYCLE;
 				end
-				else begin
+				else begin //Aún no se ocupa solicitud del contenido de ID
+					ADDR <= 0;
+					RNW <= 0;
+					req <= 0;
+					WR_DATA <= 0;
 					nextState <= WAIT_ID;
 				end
 			end //else contador
@@ -188,6 +236,12 @@ always @ ( posedge CLK ) begin
 			rAdd <= rAdd;
 			rSend <= rSend;
 			rRec <= rRec;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			if (rByte[7:1] == DevID) begin
 				byteCounter <= byteCounter+1; //Se recibió un byte entero
@@ -208,6 +262,12 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			byteCounter <= 0; //Limpiar bytes recibidos para ir a registro
 
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
+
 			woSDA <= 0; //ACK
 			nextState <= START_REG;
 		end
@@ -220,6 +280,12 @@ always @ ( posedge CLK ) begin
 			rSend <= rSend;
 			rRec <= rRec;
 			byteCounter <= byteCounter;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			if (SCL) begin
 				nextState <= START_REG;//Permanece aquí mismo para no releer el mismo estado
@@ -238,6 +304,12 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			woSDA <= 1; //Soltar línea SDA y quitar ACK
 			byteCounter <= byteCounter;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			if (SCL) begin //Espera hasta que SCL vuelva a estar en alto para ir a leer
 				count <= count-1;
@@ -258,6 +330,12 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			byteCounter <= byteCounter;
 
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
+
 			timeReset <= 1;
 			nextState <= REG_CYCLE;
 		end
@@ -269,6 +347,12 @@ always @ ( posedge CLK ) begin
 			rAdd <= rAdd;
 			rSend <= rSend;
 			rRec <= rRec;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			if (count == 0) begin
 				byteCounter <= byteCounter + 1; //Se recibió un byte entero
@@ -291,6 +375,12 @@ always @ ( posedge CLK ) begin
 			RW <= RW;
 			rSend <= rSend;
 			rRec <= rRec;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			woSDA <= 0;
 
@@ -316,6 +406,12 @@ always @ ( posedge CLK ) begin
 			rSend <= rSend;
 			rRec <= rRec;
 			byteCounter <= byteCounter;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			if (RW) begin
 				nextState <= START_READ; //Es un READ solicitado
@@ -409,7 +505,14 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			byteCounter <= byteCounter;
 
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
+
 			woSDA <= 1; //Soltar línea SDA y quitar ACK
+
 			if (SCL) begin
 				nextState <= START_WRITE;//Permanece aquí mismo para no releer el mismo estado
 			end											//inequívocamente, espera hasta asegurarse que SCL es bajo
@@ -426,6 +529,12 @@ always @ ( posedge CLK ) begin
 			rSend <= rSend;
 			rRec <= rRec;
 			byteCounter <= byteCounter;
+
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
 
 			if (SCL) begin //Espera hasta que SCL vuelva a estar en alto para ir a leer
 				count <= count-1;
@@ -446,6 +555,12 @@ always @ ( posedge CLK ) begin
 			rRec <= rRec;
 			byteCounter <= byteCounter;
 
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
+			goodCRC <= 0;
+
 			timeReset <= 1;
 			nextState <= WRITE_CYCLE;
 		end
@@ -462,19 +577,39 @@ always @ ( posedge CLK ) begin
 			if (count == 0) begin
 				byteCounter <= byteCounter+1; //Se recibió un byte
 				if (byteCounter == 1) begin //Solo se ha recibido un byte
+					ADDR <= 0;
+					RNW <= 0;
+					req <= 0;
+					WR_DATA <= 0;
+					goodCRC <= 0;
 					rRec[15:8] <= rByte;
 					nextState <= START_WRITE; //Espera para recibir siguiente byte
 				end
 				else begin //Es el segundo byte
 					rRec[7:0] <= rByte; //Escribe segundo byte
+					ADDR <= rAdd[15:8];
+					RNW <= 0;
+					req <= 1;
+					WR_DATA <= rRec;
+					goodCRC <= 0;
 					nextState <= STOP; //Envía a STOP para finalizar comunicación
 				end
 			end
 			else begin
 				if (timeCounter <= 124) begin //Espera medio ciclo para caer en SCL bajo
+					ADDR <= 0;
+					RNW <= 0;
+					req <= 0;
+					WR_DATA <= 0;
+					goodCRC <= 0;
 					nextState <= WRITE_CYCLE;
 				end
 				else begin
+					ADDR <= 0;
+					RNW <= 0;
+					req <= 0;
+					WR_DATA <= 0;
+					goodCRC <= 0;
 					nextState <= WAIT_WRITE;
 				end
 			end //else contador
