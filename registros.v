@@ -635,7 +635,7 @@ always @(posedge CLK)
 			
 		end //end para este caso del case
 		
-		
+		WR_DATA
 		'h52:
 		begin
 				if (RNW == 1)
@@ -1253,7 +1253,5 @@ always @(posedge CLK)
 
 	
 	end //end always
-
-
 
 endmodule
