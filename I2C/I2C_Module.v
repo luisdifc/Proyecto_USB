@@ -47,7 +47,7 @@ module I2C_Module (
 			  			nextState;    		 			  //Registro de próximo estado
 	reg 				Start; 	 									//Banderas para eventos en SDA y SCL
 	reg 				woSDA;							 			//Registro a SDA como salida
-	reg [15:0] 	DevID;				 						//Registro interno para almacenar la dirección de ID recibida
+	reg [6:0] 	DevID;				 						//Registro interno para almacenar la dirección de ID recibida
 	reg [31:0]  timeCounter;							//Contador de ciclos de CLK
 	reg 				timeReset;								//Resets
 
@@ -111,16 +111,17 @@ always @ ( posedge CLK ) begin
 			rRec <= 8'b0;
 			byteCounter <= 0;
 
-			ADDR <= 0;
-			RNW <= 0;
-			req <= 0;
-			WR_DATA <= 0;
 			goodCRC <= 0;
 
 			if (Start) begin
 				nextState <= START;
 			end
 			else begin
+				ADDR <= 8'h14; //AddressID dirección
+				RNW <= 1; //READ del contenido
+				req <= 1; //Se quiere accesar a registros
+				WR_DATA <= 0; //No se quiere escribir
+				DevID[6:0] <= RD_DATA[6:0]; //Obtener ID de los registros
 				nextState <= IDLE_ID;
 			end
 		end
@@ -139,6 +140,7 @@ always @ ( posedge CLK ) begin
 			req <= 0;
 			WR_DATA <= 0;
 			goodCRC <= 0;
+			DevID <= DevID;
 
 			if (SCL) begin
 				nextState <= START; //Permanece aquí mismo para no releer el mismo estado
@@ -162,6 +164,7 @@ always @ ( posedge CLK ) begin
 			req <= 0;
 			WR_DATA <= 0;
 			goodCRC <= 0;
+			DevID <= DevID;
 
 			if (SCL) begin	//Espera hasta que SCL vuelva a estar en alto para ir a leer
 				count <= count-1;
@@ -187,6 +190,7 @@ always @ ( posedge CLK ) begin
 			req <= 0;
 			WR_DATA <= 0;
 			goodCRC <= 0;
+			DevID <= DevID;
 
 			timeReset <= 1;
 			nextState <= ID_CYCLE;
@@ -195,35 +199,27 @@ always @ ( posedge CLK ) begin
 		ID_CYCLE: begin //Espera para no leer muchas veces la misma señal
 			count <= count;
 			rByte <= rByte;
-			RW <= RW;
 			rAdd <= rAdd;
 			rSend <= rSend;
+			RW <= RW;
 			rRec <= rRec;
 			byteCounter <= byteCounter;
 
+			ADDR <= 0;
+			RNW <= 0;
+			req <= 0;
+			WR_DATA <= 0;
 			goodCRC <= 0;
+			DevID <= DevID;
 
 			if (count == 0) begin
-				ADDR <= 2; //AddressID dirección
-				RNW <= 1; //READ del contenido
-				req <= 1; //Se quiere accesar a registros
-				WR_DATA <= 0; //No se quiere escribir
-				DevID <= RD_DATA; //Obtener ID de los registros
 				nextState <= COMP_ID;
 			end
 			else begin
 				if (timeCounter <= 124) begin //Espera medio ciclo para caer en SCL bajo
-					ADDR <= 0; //Aún no se ocupa solicitud del contenido de ID
-					RNW <= 0;
-					req <= 0;
-					WR_DATA <= 0;
-					nextState <= ID_CYCLE;
+						nextState <= ID_CYCLE;
 				end
-				else begin //Aún no se ocupa solicitud del contenido de ID
-					ADDR <= 0;
-					RNW <= 0;
-					req <= 0;
-					WR_DATA <= 0;
+				else begin
 					nextState <= WAIT_ID;
 				end
 			end //else contador
@@ -242,6 +238,7 @@ always @ ( posedge CLK ) begin
 			req <= 0;
 			WR_DATA <= 0;
 			goodCRC <= 0;
+			DevID <= DevID;
 
 			if (rByte[7:1] == DevID) begin
 				byteCounter <= byteCounter+1; //Se recibió un byte entero
@@ -272,7 +269,7 @@ always @ ( posedge CLK ) begin
 			nextState <= START_REG;
 		end
 /**********************************/
-		START_REG: begin //Inicia recepción de la dirección del regiistro
+		START_REG: begin //Inicia recepción de la dirección del registro
 			count <= 5'b01000;
 			rByte <= 8'b0;
 			RW <= RW;
@@ -587,10 +584,10 @@ always @ ( posedge CLK ) begin
 				end
 				else begin //Es el segundo byte
 					rRec[7:0] <= rByte; //Escribe segundo byte
-					ADDR <= rAdd[15:8];
+					ADDR <= rAdd[7:0];
 					RNW <= 0;
 					req <= 1;
-					WR_DATA <= rRec;
+					WR_DATA <= WR_DATA;
 					goodCRC <= 0;
 					nextState <= STOP; //Envía a STOP para finalizar comunicación
 				end
@@ -624,6 +621,8 @@ always @ ( posedge CLK ) begin
 			rSend <= rSend;
 			rRec <= rRec;
 			byteCounter <= 0;
+
+			WR_DATA <= rRec[15:0];
 
 			if (timeCounter == 124) begin
 				timeReset <= 1;

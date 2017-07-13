@@ -1,12 +1,12 @@
 `timescale 10ns/1ps
 
-module probador_I2C (CLK, iSDA, SCL, Reset);
+module probador_TX (CLK, iSDA, SCL, Reset);
 
     output reg CLK, iSDA, SCL, Reset;
 
     // Configuracion del reloj
 		initial begin
-		    CLK = 1;
+		    CLK = 0;
         SCL = 1;
         Reset = 1;
 		end
@@ -31,19 +31,19 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         //Prueba Write
         //ID bueno
         #149
-        iSDA <= 0;
+        iSDA <= 1;
         #249
-        iSDA <= 0;
+        iSDA <= 1;
         #249
-        iSDA <= 0;
-        #249
-        iSDA <= 0;
+        iSDA <= 1;
         #249
         iSDA <= 1;
         #249
         iSDA <= 0;
         #249
         iSDA <= 1;
+        #249
+        iSDA <= 0;
         #249
         iSDA <= 0;//WRITE
         //Soltar la línea SDA
@@ -61,20 +61,20 @@ module probador_I2C (CLK, iSDA, SCL, Reset);
         #249
         iSDA <= 0;
         #249
-        iSDA <= 1;
+        iSDA <= 0;
         #249
         iSDA <= 0;
         #249
-        iSDA <= 1;
+        iSDA <= 0;
 
         #249
         iSDA <= 0;
         #249
-        iSDA <= 0;
+        iSDA <= 1;
         #249
         iSDA <= 0;
         #249
-        iSDA <= 0;
+        iSDA <= 1;
         #249
         iSDA <= 0;
         #249
