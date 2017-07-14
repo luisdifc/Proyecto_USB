@@ -17,4 +17,4 @@ abc -liberty cmos_cells.lib
 clean
 
 # write synthesized design
-write_verilog synth.v
+write_verilog I2C_synth.v

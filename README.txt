@@ -1,5 +1,7 @@
 En este entragable se contienen diferentes carpetas que contienen cada módulo que se requería hacer.
 Para correr la prueba del reset se creo un Makefile con las instrucciones all, build, run y clean.
+En la carpeta Docs se incluye documentación del proyecto, incluyendo la Presentación Final y el 
+Reporte Final.
 A continuación se presenta la forma de correr la prueba:
 	
 	OPCION 1
