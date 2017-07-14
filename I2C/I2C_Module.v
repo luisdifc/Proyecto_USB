@@ -1,5 +1,5 @@
 //UNIVERSIDAD DE COSTA RICA
-//FACULTAD DE INGENIERIA 
+//FACULTAD DE INGENIERIA
 //ESCUELA DE INGENIERIA ELECTRICA
 
 //IE0523 - Circuitos Digitales II
@@ -31,7 +31,7 @@ module I2C_Module (
 	output reg goodCRC,
 	output reg req
 );
-	//Defines
+	//Definición de los Estados de la máquina
 	parameter IDLE_ID 	 	=	1;
 	parameter START	  	 	=	2;
 	parameter WAIT_ID 	 	=	8;
@@ -107,6 +107,7 @@ always @ (CLK, Reset ) begin
 		goodCRC <= 0;
 	end
 	else begin
+		RW <= RW;
 		currentState <= nextState;
 		if (timeReset) begin
 			timeCounter <= 32'b0;
@@ -114,6 +115,7 @@ always @ (CLK, Reset ) begin
 		end
 		else begin
 			timeCounter <= timeCounter+1;
+			timeReset <= timeReset;
 		end
 	end
 end
@@ -729,7 +731,6 @@ always @ ( posedge CLK ) begin
 
 			nextState <= IDLE_ID;
 			end
-
 	endcase
 end
 
