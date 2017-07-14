@@ -1,5 +1,5 @@
 //UNIVERSIDAD DE COSTA RICA
-//FACULTAD DE INGENIERIA
+//FACULTAD DE INGENIERIA 
 //ESCUELA DE INGENIERIA ELECTRICA
 
 //IE0523 - Circuitos Digitales II
@@ -22,7 +22,7 @@ module I2C_Module (
 	input SCL,
 	input CLK,
 	input iSDA,
-	input wire Reset,
+	input Reset,
 	output oSDA,
 	input [15:0] RD_DATA,
 	output reg [15:0] WR_DATA,
@@ -31,7 +31,7 @@ module I2C_Module (
 	output reg goodCRC,
 	output reg req
 );
-	//Definición de los Estados de la máquina
+	//Defines
 	parameter IDLE_ID 	 	=	1;
 	parameter START	  	 	=	2;
 	parameter WAIT_ID 	 	=	8;
@@ -70,7 +70,6 @@ module I2C_Module (
 	reg [6:0] 	DevID;				 						//Registro interno para almacenar la dirección de ID recibida
 	reg [31:0]  timeCounter;							//Contador de ciclos de CLK
 	reg 				timeReset;								//Resets
-	reg 				nxt_timeReset;
 
 //assign
 	assign oSDA = woSDA;
@@ -108,7 +107,6 @@ always @ (CLK, Reset ) begin
 		goodCRC <= 0;
 	end
 	else begin
-		RW <= RW;
 		currentState <= nextState;
 		if (timeReset) begin
 			timeCounter <= 32'b0;
@@ -116,14 +114,12 @@ always @ (CLK, Reset ) begin
 		end
 		else begin
 			timeCounter <= timeCounter+1;
-			timeReset <= nextState;
 		end
 	end
 end
 
 //State Machine
 always @ ( posedge CLK ) begin
-	nxt_timeReset <= timeReset;
 
 	case (currentState)
 		IDLE_ID: begin //Inicializa máquina
@@ -221,7 +217,7 @@ always @ ( posedge CLK ) begin
 			goodCRC <= 0;
 			DevID <= DevID;
 
-			nxt_timeReset <= 1;
+			timeReset <= 1;
 			nextState <= ID_CYCLE;
 		end
 /**********************************/
@@ -366,7 +362,7 @@ always @ ( posedge CLK ) begin
 			goodCRC <= 0;
 			DevID <= DevID;
 
-			nxt_timeReset <= 1;
+			timeReset <= 1;
 			nextState <= REG_CYCLE;
 		end
 /**********************************/
@@ -528,7 +524,7 @@ always @ ( posedge CLK ) begin
 			DevID <= DevID;
 
 			woSDA <= rSend[count]; //Pasa bit a bit el contenido de rSend
-			nxt_timeReset <= 1;
+			timeReset <= 1;
 			nextState <= SEND_CYCLE;
 		end
 /**********************************/
@@ -548,7 +544,7 @@ always @ ( posedge CLK ) begin
 
 			if (count == 0) begin
 				byteCounter <= byteCounter+1;
-				nxt_timeReset <= 1;
+				timeReset <= 1;
 				goodCRC <= 1;
 				nextState <= STOP; //Envía a STOP para finalizar comunicación
 			end
@@ -633,7 +629,7 @@ always @ ( posedge CLK ) begin
 			goodCRC <= 0;
 			DevID <= DevID;
 
-			nxt_timeReset <= 1;
+			timeReset <= 1;
 			nextState <= WRITE_CYCLE;
 		end
 /**********************************/
@@ -708,7 +704,7 @@ always @ ( posedge CLK ) begin
 			WR_DATA <= rRec[15:0];
 
 			if (timeCounter == 124) begin
-				nxt_timeReset <= 1;
+				timeReset <= 1;
 				nextState <= IDLE_ID;
 			end
 			else begin
@@ -733,6 +729,7 @@ always @ ( posedge CLK ) begin
 
 			nextState <= IDLE_ID;
 			end
+
 	endcase
 end
 
