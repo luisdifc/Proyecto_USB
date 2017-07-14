@@ -34,7 +34,7 @@ output reg [9:0] segs;
 input wire CLK;
 input wire reset;
 
-always @(posedge CLK or negedge CLK) begin
+always @(posedge CLK) begin
 	if (reset) begin
 		nanos <= 0;
 		micros <= 0;
