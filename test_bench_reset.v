@@ -1,6 +1,6 @@
 `include "I2C/I2C_Module.v"
 `include "Probadores/probador_Reset.v"
-`include "Registers_Module.v"
+`include "Registros/Registers_Module.v"
 //`include "reset/timer.v"
 `include "Reset_Module.v"
 `timescale 1ns/1ps
