@@ -1,3 +1,23 @@
+//UNIVERSIDAD DE COSTA RICA
+//FACULTAD DE INGENIERIA 
+//ESCUELA DE INGENIERIA ELECTRICA
+
+//IE0523 - Circuitos Digitales II
+//I - 2017
+
+//Proyecto Final:
+//Controlador de puerto USB tipo C
+
+//Estudiantes:
+//Luis Diego Fernandez, B22492
+//Lennon Nunez, B34943
+//Bernardo Zúñiga, B27445
+
+//Profesor:
+//Enrique Coen Alfaro
+
+//14/07/17
+
 module Registros(CLK, maq_est_req, reset, ADDR, RNW, WR_DATA, RD_DATA, req, ACK, cc_status, power_status, USBproduct_id_i, bcdDEVICE_i, alert_i, alert_mask_i, vendor_id_i, receive_detect_i, receive_byte_count_i, transmit_i,
 transmit_byte_count_i, ALERT, TRANSMIT);
 input CLK;

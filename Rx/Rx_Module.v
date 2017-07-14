@@ -1,12 +1,48 @@
-module Rx_Module (CLK, reset, Start, iRX_BUF_FRAME_TYPE, iALERT, iRECEIVE_DETECT, iRECEIVE_BYTE_COUNT, 
-					Tx_State_Machine_ACTIVE, Unexpected_GoodCRC, CC_Busy, CC_IDLE, Data_In, oALERT, 
-					oRECEIVE_BYTE_COUNT, oGoodCRC_to_PHY, oDIR_WRITE, oDATA_to_Buffer);
+//UNIVERSIDAD DE COSTA RICA
+//FACULTAD DE INGENIERIA 
+//ESCUELA DE INGENIERIA ELECTRICA
+
+//IE0523 - Circuitos Digitales II
+//I - 2017
+
+//Proyecto Final:
+//Controlador de puerto USB tipo C
+
+//Estudiantes:
+//Luis Diego Fernandez, B22492
+//Lennon Nunez, B34943
+//Bernardo Zúñiga, B27445
+
+//Profesor:
+//Enrique Coen Alfaro
+
+//14/07/17
+
+`timescale 10ns/1ps
+
+module Rx_Module (CLK, 
+				reset, 
+				Start, 
+				iRX_BUF_FRAME_TYPE, 
+				iALERT, 
+				iRECEIVE_DETECT, 
+				iRECEIVE_BYTE_COUNT, 
+				Tx_State_Machine_ACTIVE, 
+				Unexpected_GoodCRC, 
+				CC_Busy, 
+				CC_IDLE, 
+				Data_In, 
+				oALERT, 
+				oRECEIVE_BYTE_COUNT, 
+				oGoodCRC_to_PHY, 
+				oDIR_WRITE, 
+				oDATA_to_Buffer);
 
 //inputs declaration
 input wire CC_Busy, CC_IDLE;
 input wire CLK;
 input wire [7:0] Data_In;
-input wire [15:0] iALERT; //B3 Hard Reset 
+input wire [15:0] iALERT; //b3 Hard Reset 
 input wire [7:0] iRECEIVE_BYTE_COUNT;
 input wire [7:0] iRECEIVE_DETECT;
 input wire [7:0] iRX_BUF_FRAME_TYPE; //B2..0   110b: Received Cable Reset
@@ -34,7 +70,7 @@ reg [5:0] state;
 
 assign PHY_Reset = (iRX_BUF_FRAME_TYPE[2:0] == 3'b110) || (iALERT[3] == 1);
 
-//macchine states
+//machine states declaration
 localparam IDLE = 6'b000001;
 localparam PRL_Rx_Wait_for_PHY_message = 6'b000010;
 localparam PRL_Rx_Message_Discard = 6'b000100;
@@ -43,10 +79,9 @@ localparam PRL_RX_Report_SOP = 6'b010000;
  
 parameter max_iRECEIVE_BYTE_COUNT = 31; 
 		
-
-//reset 
+//reset interno
 always @(posedge CLK) begin 
-	if (~reset) begin
+	if (reset) begin
 		state <= IDLE; //initial state
 		oDIR_WRITE <= 8'b0;
 		oALERT <= 16'b0;

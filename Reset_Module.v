@@ -1,22 +1,49 @@
-// `include "reset/timer.v"
+//UNIVERSIDAD DE COSTA RICA
+//FACULTAD DE INGENIERIA 
+//ESCUELA DE INGENIERIA ELECTRICA
+
+//IE0523 - Circuitos Digitales II
+//I - 2017
+
+//Proyecto Final:
+//Controlador de puerto USB tipo C
+
+//Estudiantes:
+//Luis Diego Fernandez, B22492
+//Lennon Nunez, B34943
+//Bernardo Zúñiga, B27445
+
+//Profesor:
+//Enrique Coen Alfaro
+
+//14/07/17
+
 `include "timer.v"
 `timescale 10ns/1ps
 
-module Reset_Module (CLK, reset, ioTRANSMIT, iAlert, oTRANSMIT, ALERT, oRECEIVE_DETECT, oRECEIVE_BYTE_COUNT,
-						PHY_Stop_Attempting_Reset);
+module Reset_Module (CLK, 
+					reset, 
+					ioTRANSMIT, 
+					iAlert, 
+					oTRANSMIT, 
+					ALERT, 
+					oRECEIVE_DETECT, 
+					oRECEIVE_BYTE_COUNT,
+					PHY_Stop_Attempting_Reset
+);
 
 //inputs declaration
 input wire CLK;
-input wire [7:0] ioTRANSMIT;
-input wire reset;
-input wire [15:0]iAlert;
+input wire [15:0]iAlert; //register from memory
+input wire [7:0] ioTRANSMIT; //register from memory
+input wire reset; //internal reset
 
 //outputs declaration
-output reg [15:0] ALERT;
+output reg [15:0] ALERT; //register from memory
 output reg PHY_Stop_Attempting_Reset;
-output reg [7:0] oRECEIVE_BYTE_COUNT;
-output reg [7:0] oRECEIVE_DETECT;
-output reg [7:0] oTRANSMIT; //es un registro de la memoria
+output reg [7:0] oRECEIVE_BYTE_COUNT; //register from memory
+output reg [7:0] oRECEIVE_DETECT; //register from memory
+output reg [7:0] oTRANSMIT; //register from memory
 
 //variables
 wire [9:0] nanos;
@@ -27,11 +54,10 @@ reg [7:0] nxt_oRECEIVE_DETECT;
 reg nxt_timer_Reset;
 reg [6:0] nxt_State;
 reg [7:0] nxt_oTRANSMIT;
-//reg [1:0] transmit_counter;
 reg [1:0] nxt_transmit_counter;
 wire PHY_reset;
 reg [6:0] state;
-integer timeLapse = 900; //por decir algo, algun tiempo
+integer timeLapse = 900; //for the counter
 reg timer_Reset;
 
 //PHY_reset me dice si hubo un cable reset o un hard reset
@@ -46,7 +72,7 @@ timer t1(.CLK(CLK),
 			.reset(timer_Reset)
 );
 
-//machine states
+//machine states declaration
 localparam IDLE = 								7'b0000001;
 localparam PRL_HR_Wait_for_Hard_Reset_Request = 7'b0000010;
 localparam PRL_HR_Construct_Message = 			7'b0000100;
@@ -54,7 +80,7 @@ localparam PRL_HR_Success = 					7'b0001000;
 localparam PRL_HR_Failure = 					7'b0010000;
 localparam PRL_HR_Report = 						7'b0100000;
 
-//reset
+//reset interno
 always @(posedge CLK) begin
 	if (reset) begin
 		state <= IDLE; //initial state
@@ -64,7 +90,6 @@ always @(posedge CLK) begin
 		oRECEIVE_DETECT <= 8'b0;
 		oRECEIVE_BYTE_COUNT <= 8'b0;
 		timer_Reset <= 1;
-		//transmit_counter <= 0;
 	end else begin
 		state <= nxt_State;
 		PHY_Stop_Attempting_Reset <= nxt_PHY_Stop_Attempting_Reset;
@@ -73,7 +98,6 @@ always @(posedge CLK) begin
 		oRECEIVE_DETECT <= nxt_oRECEIVE_DETECT;
 		oRECEIVE_BYTE_COUNT <= nxt_oRECEIVE_BYTE_COUNT;
 		timer_Reset <= nxt_timer_Reset;
-		//transmit_counter <= nxt_transmit_counter;
 	end //end else
 end //always @(posedge CLK)
 
@@ -86,7 +110,6 @@ always @ (*) begin
 	nxt_oRECEIVE_DETECT <= oRECEIVE_DETECT;
 	nxt_oRECEIVE_BYTE_COUNT <= oRECEIVE_BYTE_COUNT;
 
-	//nxt_transmit_counter <= transmit_counter;
 	nxt_timer_Reset <= timer_Reset;
 
 	case (state)
@@ -132,7 +155,6 @@ always @ (*) begin
 
 		//----------SIXTEENTHSTATE----------
 		PRL_HR_Failure: begin
-			//timer_Reset = 1; //paro el timer
 			nxt_State <= PRL_HR_Report;
 			PHY_Stop_Attempting_Reset <= 1;
 		end //PRL_HR_Failure
@@ -140,7 +162,7 @@ always @ (*) begin
 		//----------THIRTYTWOTH STATE----------
 		PRL_HR_Report: begin
 			if (nanos == 0) begin //si el timer esta en 0 hubo exito
-				nxt_ALERT <= 16'b1000000; //ALERT.TransmitSuccesfu
+				nxt_ALERT <= 16'b1000000; //ALERT.TransmitSuccesful
 			end else begin
 				nxt_ALERT <= 16'b10000; //ALERT.TransmitSOP*MessageFailed
 			end

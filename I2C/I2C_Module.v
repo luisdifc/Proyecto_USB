@@ -1,3 +1,23 @@
+//UNIVERSIDAD DE COSTA RICA
+//FACULTAD DE INGENIERIA 
+//ESCUELA DE INGENIERIA ELECTRICA
+
+//IE0523 - Circuitos Digitales II
+//I - 2017
+
+//Proyecto Final:
+//Controlador de puerto USB tipo C
+
+//Estudiantes:
+//Luis Diego Fernandez, B22492
+//Lennon Nunez, B34943
+//Bernardo Zúñiga, B27445
+
+//Profesor:
+//Enrique Coen Alfaro
+
+//14/07/17
+
 module I2C_Module (
 	input SCL,
 	input CLK,

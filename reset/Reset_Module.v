@@ -1,21 +1,30 @@
 `include "timer.v"
 
-module Reset_Module (CLK, reset, ioTRANSMIT, PHY_ACK, iAlert, oTRANSMIT, ALERT, oRECEIVE_DETECT, oRECEIVE_BYTE_COUNT, 
-						PHY_Stop_Attempting_Reset);
+module Reset_Module (CLK, 
+					reset, 
+					ioTRANSMIT, 
+					PHY_ACK, 
+					iAlert, 
+					oTRANSMIT, 
+					ALERT, 
+					oRECEIVE_DETECT, 
+					oRECEIVE_BYTE_COUNT, 
+					PHY_Stop_Attempting_Reset
+);
 
 //inputs declaration
 input wire CLK;	
-input wire [7:0] ioTRANSMIT;
+input wire [15:0]iAlert; //register from memory
+input wire [7:0] ioTRANSMIT; //register from memory
 input wire PHY_ACK;
 input wire reset;
-input wire [15:0]iAlert;
 
 //outputs declaration
-output reg [15:0] ALERT;
+output reg [15:0] ALERT; //register from memory
 output reg PHY_Stop_Attempting_Reset;
-output reg [7:0] oRECEIVE_BYTE_COUNT;
-output reg [7:0] oRECEIVE_DETECT;
-output reg [7:0] oTRANSMIT; //es un registro de la memoria
+output reg [7:0] oRECEIVE_BYTE_COUNT; //register from memory
+output reg [7:0] oRECEIVE_DETECT; //register from memory
+output reg [7:0] oTRANSMIT; //register from memory
 
 //variables
 wire [9:0] nanos;
